@@ -1,0 +1,6 @@
+{
+  "singleQuote": true,
+  "jsxSingleQuote": true,
+  "tailwindFunctions": ["clsx", "cva", "twMerge"],
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
