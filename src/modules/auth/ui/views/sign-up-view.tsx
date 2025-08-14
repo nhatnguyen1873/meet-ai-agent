@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { OctagonAlert } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { Container } from '@/modules/auth/ui/components/container';
@@ -30,6 +29,9 @@ import {
 import { ContainerProviders } from '@/modules/auth/ui/components/container-providers';
 import { ContainerFooter } from '@/modules/auth/ui/components/container-footer';
 import { ContainerFooterLink } from '@/modules/auth/ui/components/container-footer-link';
+import type { SocialProvider } from 'better-auth/social-providers';
+import { socialProviders } from '@/lib/social-proivders';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z
   .object({
@@ -76,6 +78,26 @@ export const SignUpView = () => {
         onSuccess: () => {
           router.push('/');
         },
+        onError: (ctx) => {
+          setError(ctx.error.message);
+        },
+        onResponse: () => {
+          setIsPending(false);
+        },
+      },
+    );
+  };
+
+  const onSocial = (provider: SocialProvider) => {
+    setError(undefined);
+    setIsPending(true);
+
+    authClient.signIn.social(
+      {
+        provider,
+        callbackURL: '/',
+      },
+      {
         onError: (ctx) => {
           setError(ctx.error.message);
         },
@@ -191,9 +213,17 @@ export const SignUpView = () => {
         </DividerWithText>
 
         <ContainerProviders>
-          {['Google', 'Github'].map((provider) => (
-            <Button key={provider} variant={'outline'} disabled={isPending}>
-              {provider}
+          {socialProviders.map((item) => (
+            <Button
+              key={item.id}
+              variant={'outline'}
+              disabled={isPending}
+              onClick={() => {
+                onSocial(item.provider);
+              }}
+            >
+              <item.icon />
+              {item.label}
             </Button>
           ))}
         </ContainerProviders>
