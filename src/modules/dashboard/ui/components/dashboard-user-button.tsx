@@ -25,6 +25,8 @@ export const DashboardUserButton = () => {
 
   const user = authSession.data?.user;
 
+  const sharedAvatarClassName = 'size-6' as const;
+
   const handleLogout = () => {
     authClient.signOut({
       fetchOptions: {
@@ -44,13 +46,17 @@ export const DashboardUserButton = () => {
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton className='h-[initial]'>
+            <SidebarMenuButton className='h-[initial] p-1 group-data-[collapsible=icon]:p-1!'>
               {user.image ? (
-                <Avatar>
+                <Avatar className={sharedAvatarClassName}>
                   <AvatarImage src={user.image} />
                 </Avatar>
               ) : (
-                <GeneratedAvatar seed={user.name} variant={'initials'} />
+                <GeneratedAvatar
+                  seed={user.name}
+                  variant={'initials'}
+                  className={sharedAvatarClassName}
+                />
               )}
               <div className='flex flex-col gap-0.5'>
                 <p className='w-full truncate text-sm'>{user.name}</p>
@@ -58,7 +64,7 @@ export const DashboardUserButton = () => {
               </div>
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className='w-(--radix-popper-anchor-width)'>
+          <DropdownMenuContent align='start' className='w-60'>
             <DropdownMenuLabel>
               <div className='flex flex-col gap-1'>
                 <p className='truncate font-medium'>{user.name}</p>

@@ -1,4 +1,5 @@
 import { SidebarProvider } from '@/components/ui/sidebar';
+import { DashboardNavbar } from '@/modules/dashboard/ui/components/dashboard-navbar';
 import { DashboardSidebar } from '@/modules/dashboard/ui/components/dashboard-sidebar';
 import type { ReactNode } from 'react';
 
@@ -10,7 +11,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <SidebarProvider>
       <DashboardSidebar />
-      <main className='grow'>{children}</main>
+      <div className='flex grow flex-col'>
+        <DashboardNavbar />
+        <main className='grow'>{children}</main>
+      </div>
     </SidebarProvider>
   );
 }
