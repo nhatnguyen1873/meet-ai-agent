@@ -13,9 +13,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import { DashboardUserButton } from '@/modules/dashboard/ui/components/dashboard-user-button';
-import { BotIcon, StarIcon, VideoIcon } from 'lucide-react';
+import {
+  BotIcon,
+  PanelLeftClose,
+  PanelLeftOpen,
+  StarIcon,
+  VideoIcon,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -40,56 +47,69 @@ const secondSection = [
   },
 ];
 
+const sections = [
+  {
+    label: 'General',
+    items: firstSection,
+  },
+  {
+    label: 'Settings',
+    items: secondSection,
+  },
+];
+
 export const DashboardSidebar = () => {
   const pathname = usePathname();
+  const sidebar = useSidebar();
 
   return (
-    <Sidebar>
+    <Sidebar collapsible='icon' className='box-content'>
       <SidebarHeader className='flex-row'>
-        <Link href='/' className='hover:bg-muted rounded-xl p-2'>
-          <LogoLight className='h-6 w-9' />
+        <Link href='/' className='hover:bg-muted rounded-xl p-1'>
+          <LogoLight className='size-7' />
         </Link>
       </SidebarHeader>
       <div className='px-2'>
         <SidebarSeparator className='mx-[initial]' />
       </div>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>General</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {firstSection.map((item) => (
-                <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton asChild isActive={pathname === item.href}>
-                    <Link href={item.href}>
-                      <item.icon className='size-4' />
-                      <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Settings</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {secondSection.map((item) => (
-                <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton asChild isActive={pathname === item.href}>
-                    <Link href={item.href}>
-                      <item.icon className='size-4' />
-                      <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {sections.map((section) => (
+          <SidebarGroup key={section.label}>
+            <SidebarGroupLabel>{section.label}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => (
+                  <SidebarMenuItem key={item.label}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === item.href}
+                      tooltip={item.label}
+                    >
+                      <Link href={item.href}>
+                        <item.icon />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
       <SidebarFooter>
+        {!sidebar.isMobile && (
+          <div
+            className='hover:bg-sidebar-accent flex size-8 cursor-pointer items-center justify-center rounded-xl'
+            onClick={sidebar.toggleSidebar}
+          >
+            {sidebar.open ? (
+              <PanelLeftClose className='size-4' />
+            ) : (
+              <PanelLeftOpen className='size-4' />
+            )}
+          </div>
+        )}
         <DashboardUserButton />
       </SidebarFooter>
     </Sidebar>

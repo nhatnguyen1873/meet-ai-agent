@@ -12,7 +12,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       <div className='flex flex-col overflow-y-auto'>
         <div className='p-5'>
           <Link href={'/'}>
-            <LogoLight className='w-20' />
+            <LogoLight className='w-10' />
           </Link>
         </div>
         <div className='grow p-5'>{children}</div>
@@ -23,7 +23,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         </p>
       </div>
       <div className='hidden items-center justify-center bg-slate-950 md:flex'>
-        <LogoLight className='size-[300px]' />
+        <LogoLight className='size-60' />
       </div>
     </div>
   );
