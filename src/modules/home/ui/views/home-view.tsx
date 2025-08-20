@@ -1,41 +1,17 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { authClient } from '@/lib/auth-client';
-import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
-import { type DetailedHTMLProps, type HTMLAttributes } from 'react';
+import { useTRPC } from '@/trpc/client';
+import { useQuery } from '@tanstack/react-query';
 
 export const HomeView = () => {
-  const router = useRouter();
   const authSession = authClient.useSession();
-
-  if (authSession.data?.user) {
-    return (
-      <Container className='flex flex-col gap-4'>
-        <p>Logged in as {authSession.data.user.email}</p>
-        <Button
-          onClick={() => {
-            authClient.signOut({
-              fetchOptions: {
-                onSuccess: () => {
-                  router.push('/sign-in');
-                },
-              },
-            });
-          }}
-        >
-          Sign out
-        </Button>
-      </Container>
-    );
-  }
-
-  return <Container>Loading...</Container>;
+  const trpc = useTRPC();
+  const { data } = useQuery(
+    trpc.hello.queryOptions(
+      { text: authSession.data?.user?.name || '' },
+      { enabled: !!authSession.data?.user },
+    ),
+  );
+  return <div>{data?.greeting}</div>;
 };
-
-function Container(
-  props: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
-) {
-  return <div {...props} className={cn('p-6', props.className)} />;
-}
