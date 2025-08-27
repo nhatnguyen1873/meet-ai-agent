@@ -9,7 +9,7 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <SidebarProvider>
+    <SidebarProvider className='bg-muted'>
       <DashboardSidebar />
       <div className='flex grow flex-col'>
         <DashboardNavbar />
