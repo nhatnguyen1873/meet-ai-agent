@@ -66,7 +66,7 @@ export const DashboardSidebar = () => {
     <Sidebar collapsible='icon' className='box-content'>
       <SidebarHeader className='flex-row'>
         <Link href='/' className='hover:bg-muted rounded-xl p-1'>
-          <LogoLight className='size-7' />
+          <LogoLight className='size-6' />
         </Link>
       </SidebarHeader>
       <div className='px-2'>
