@@ -2,11 +2,15 @@
 
 import { ResponsiveDialog } from '@/components/responsive-dialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { DEFAULT_PAGE } from '@/constants';
 import { AgentForm } from '@/modules/agents/components/agent-form';
-import { Plus } from 'lucide-react';
+import { useAgentsFilters } from '@/modules/agents/hooks/use-agents-filters';
+import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
 
 export const AgentListHeader = () => {
+  const [filters, setFilters] = useAgentsFilters();
   const [isNewAgentDialogOpen, setIsNewAgentDialogOpen] = useState(false);
 
   return (
@@ -26,15 +30,43 @@ export const AgentListHeader = () => {
           }}
         />
       </ResponsiveDialog>
-      <div className='flex items-center justify-between p-4'>
-        <h5 className='text-xl font-medium'>My Agents</h5>
-        <Button
-          onClick={() => {
-            setIsNewAgentDialogOpen(true);
-          }}
-        >
-          <Plus /> Add Agent
-        </Button>
+      <div className='flex flex-col gap-3 p-4'>
+        <div className='flex items-center justify-between'>
+          <h5 className='text-xl font-medium'>My Agents</h5>
+          <Button
+            onClick={() => {
+              setIsNewAgentDialogOpen(true);
+            }}
+          >
+            <Plus /> Add Agent
+          </Button>
+        </div>
+        <div className='flex items-center gap-2'>
+          <Input
+            placeholder='Search by name'
+            value={filters.search}
+            onChange={(e) => {
+              setFilters({
+                search: e.target.value,
+              });
+            }}
+            className='w-[240px] bg-white'
+          />
+          {!!filters.search && (
+            <Button
+              variant='outline'
+              onClick={() => {
+                setFilters({
+                  search: '',
+                  page: DEFAULT_PAGE,
+                });
+              }}
+            >
+              <X />
+              Clear
+            </Button>
+          )}
+        </div>
       </div>
     </>
   );

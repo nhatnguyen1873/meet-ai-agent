@@ -63,7 +63,7 @@ export function DataTable<TData, TValue>({
                 onClick={() => {
                   onRowClick?.(row.original);
                 }}
-                className='cursor-pointer'
+                className={onRowClick ? 'cursor-pointer' : undefined}
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id} className='p-4 text-sm'>

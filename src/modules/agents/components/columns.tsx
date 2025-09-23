@@ -4,7 +4,7 @@ import type { AgentGetMany } from '@/modules/agents/types';
 import { ColumnDef } from '@tanstack/react-table';
 import { Video } from 'lucide-react';
 
-export const columns: ColumnDef<AgentGetMany[number]>[] = [
+export const columns: ColumnDef<AgentGetMany['items'][number]>[] = [
   {
     accessorKey: 'name',
     header: 'Name',
@@ -20,10 +20,15 @@ export const columns: ColumnDef<AgentGetMany[number]>[] = [
   {
     accessorKey: 'meetingCount',
     header: 'Meetings',
-    cell: () => (
-      <Badge variant={'outline'} className='gap-x-2'>
-        <Video className='size-4 text-blue-700' />5 meetings
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const { meetingCount = 0 } = row.original;
+
+      return (
+        <Badge variant={'outline'} className='gap-x-2'>
+          <Video className='size-4 text-blue-700' />
+          {meetingCount} meeting{meetingCount <= 1 ? '' : 's'}
+        </Badge>
+      );
+    },
   },
 ];
