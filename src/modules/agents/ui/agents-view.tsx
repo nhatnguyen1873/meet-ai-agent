@@ -1,22 +1,34 @@
 'use client';
 
+import { DataPagination } from '@/components/data-pagination';
 import { EmptyState } from '@/components/empty-state';
 import { ErrorState } from '@/components/error-state';
 import { LoadingState } from '@/components/loading-state';
 import { columns } from '@/modules/agents/components/columns';
 import { DataTable } from '@/modules/agents/components/data-table';
+import { useAgentsFilters } from '@/modules/agents/hooks/use-agents-filters';
 import { useTRPC } from '@/trpc/client';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
 export const AgentsView = () => {
+  const [filters, setFilters] = useAgentsFilters();
   const trpc = useTRPC();
-  const getAgents = useSuspenseQuery(trpc.agents.getMany.queryOptions());
+  const getAgents = useSuspenseQuery(trpc.agents.getMany.queryOptions(filters));
 
   return (
-    <div className='px-4 pb-4'>
-      {getAgents.data.length ? (
-        <DataTable columns={columns} data={getAgents.data} />
+    <div className='flex flex-col gap-4 px-4 pb-4'>
+      {getAgents.data?.total ? (
+        <>
+          <DataTable columns={columns} data={getAgents.data.items} />
+          <DataPagination
+            totalPages={getAgents.data.totalPages}
+            page={filters.page}
+            onPageChange={(page) => {
+              setFilters({ page });
+            }}
+          />
+        </>
       ) : (
         <EmptyState
           title='Create your first agent'
