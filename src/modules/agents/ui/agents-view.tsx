@@ -9,9 +9,11 @@ import { DataTable } from '@/modules/agents/components/data-table';
 import { useAgentsFilters } from '@/modules/agents/hooks/use-agents-filters';
 import { useTRPC } from '@/trpc/client';
 import { useSuspenseQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 export const AgentsView = () => {
+  const router = useRouter();
   const [filters, setFilters] = useAgentsFilters();
   const trpc = useTRPC();
   const getAgents = useSuspenseQuery(trpc.agents.getMany.queryOptions(filters));
@@ -20,7 +22,13 @@ export const AgentsView = () => {
     <div className='flex flex-col gap-4 px-4 pb-4'>
       {getAgents.data?.total ? (
         <>
-          <DataTable columns={columns} data={getAgents.data.items} />
+          <DataTable
+            columns={columns}
+            data={getAgents.data.items}
+            onRowClick={(row) => {
+              router.push(`/agents/${row.id}`);
+            }}
+          />
           <DataPagination
             totalPages={getAgents.data.totalPages}
             page={filters.page}
