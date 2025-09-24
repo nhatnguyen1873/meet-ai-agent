@@ -19,7 +19,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import z from 'zod';
+import * as z from 'zod';
 
 type AgentInsertValues = z.infer<typeof agentInsertSchema>;
 
@@ -43,6 +43,21 @@ export const AgentForm = ({
           trpc.agents.getMany.queryOptions({}),
         );
 
+        onSuccess?.();
+        toast.success('Agent created successfully');
+      },
+      onError: (error) => {
+        toast.error(error.message);
+      },
+    }),
+  );
+  const updateAgent = useMutation(
+    trpc.agents.update.mutationOptions({
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(
+          trpc.agents.getMany.queryOptions({}),
+        );
+
         if (initialValues?.id) {
           await queryClient.invalidateQueries(
             trpc.agents.getOne.queryOptions({ id: initialValues.id }),
@@ -50,6 +65,7 @@ export const AgentForm = ({
         }
 
         onSuccess?.();
+        toast.success('Agent updated successfully');
       },
       onError: (error) => {
         toast.error(error.message);
@@ -68,7 +84,10 @@ export const AgentForm = ({
 
   const handleSubmit = (values: AgentInsertValues) => {
     if (isEdit) {
-      console.log('Update');
+      updateAgent.mutate({
+        id: initialValues.id,
+        ...values,
+      });
     } else {
       createAgent.mutate(values);
     }
@@ -125,7 +144,10 @@ export const AgentForm = ({
               Cancel
             </Button>
           )}
-          <Button type='submit' disabled={createAgent.isPending}>
+          <Button
+            type='submit'
+            disabled={createAgent.isPending || updateAgent.isPending}
+          >
             {isEdit ? 'Update' : 'Create'}
           </Button>
         </div>
