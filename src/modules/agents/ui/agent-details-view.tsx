@@ -71,7 +71,7 @@ export const AgentDetailsView = ({ agentId }: AgentDetailsViewProps) => {
           agentName={getAgentDetails.data.name}
           onEdit={() => setUpdateAgentDialogOpen(true)}
           onDelete={async () => {
-            const ok = await confirm({});
+            const ok = await confirm();
             if (!ok) return;
             deleteAgent.mutate({ id: agentId });
           }}

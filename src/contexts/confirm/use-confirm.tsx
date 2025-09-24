@@ -14,7 +14,7 @@ export const useConfirm = (defaultParams: ConfirmParams) => {
   const confirm = ({
     title = defaultParams.title,
     description = defaultParams.description,
-  }) =>
+  }: Partial<ConfirmParams> = {}) =>
     context.confirm({
       title,
       description,

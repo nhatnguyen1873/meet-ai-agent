@@ -2,7 +2,7 @@
 
 import { ResponsiveDialog } from '@/components/responsive-dialog';
 import { Button } from '@/components/ui/button';
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useEffect, useState } from 'react';
 
 export interface ConfirmParams {
   title: string;
@@ -36,17 +36,28 @@ export const ConfirmProvider = ({ children }: ConfirmProviderProps) => {
     });
   };
 
-  const handleClose = () => setPromise(undefined);
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      promise?.resolve(false);
+      setPromise(undefined);
+    }
+  };
 
   const handleConfirm = () => {
     promise?.resolve(true);
-    handleClose();
+    setPromise(undefined);
   };
 
   const handleCancel = () => {
     promise?.resolve(false);
-    handleClose();
+    setPromise(undefined);
   };
+
+  useEffect(() => {
+    return () => {
+      promise?.resolve(false);
+    };
+  }, [promise]);
 
   return (
     <ConfirmContext.Provider value={{ confirm }}>
@@ -54,7 +65,7 @@ export const ConfirmProvider = ({ children }: ConfirmProviderProps) => {
         title={title}
         description={description}
         open={!!promise}
-        onOpenChange={handleClose}
+        onOpenChange={handleOpenChange}
       >
         <div className='flex flex-col-reverse gap-2 md:flex-row md:justify-end'>
           <Button variant='outline' onClick={handleCancel}>
