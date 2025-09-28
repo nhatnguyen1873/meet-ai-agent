@@ -33,8 +33,10 @@
     "client-only": "^0.0.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^17.2.1",
     "drizzle-orm": "^0.44.4",
+    "humanize-duration": "^3.33.1",
     "lucide-react": "^0.539.0",
     "nanoid": "^5.1.5",
     "next": "15.4.6",
@@ -52,6 +54,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/humanize-duration": "^3.27.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
