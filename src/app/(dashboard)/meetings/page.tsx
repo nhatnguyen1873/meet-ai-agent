@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth';
+import { MeetingsListHeader } from '@/modules/meetings/ui/components/meetings-list-header';
 import {
   MeetingsView,
   MeetingsViewLoading,
@@ -20,10 +21,13 @@ export default async function MeetingsPage() {
   prefetch(trpc.meetings.getMany.queryOptions({}));
 
   return (
-    <HydrateClient>
-      <Suspense fallback={<MeetingsViewLoading />}>
-        <MeetingsView />
-      </Suspense>
-    </HydrateClient>
+    <>
+      <MeetingsListHeader />
+      <HydrateClient>
+        <Suspense fallback={<MeetingsViewLoading />}>
+          <MeetingsView />
+        </Suspense>
+      </HydrateClient>
+    </>
   );
 }

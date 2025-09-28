@@ -28,7 +28,7 @@ import { usePathname } from 'next/navigation';
 
 const firstSection = [
   {
-    label: 'Meeting',
+    label: 'Meetings',
     href: '/meetings',
     icon: VideoIcon,
   },
