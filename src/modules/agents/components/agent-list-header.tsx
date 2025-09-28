@@ -1,10 +1,9 @@
 'use client';
 
-import { ResponsiveDialog } from '@/components/responsive-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DEFAULT_PAGE } from '@/constants';
-import { AgentForm } from '@/modules/agents/components/agent-form';
+import { NewAgentDialog } from '@/modules/agents/components/new-agent-dialog';
 import { useAgentsFilters } from '@/modules/agents/hooks/use-agents-filters';
 import { Plus, X } from 'lucide-react';
 import { useState } from 'react';
@@ -15,21 +14,10 @@ export const AgentListHeader = () => {
 
   return (
     <>
-      <ResponsiveDialog
-        title='New Agent'
-        description='Add a new agent'
+      <NewAgentDialog
         open={isNewAgentDialogOpen}
         onOpenChange={setIsNewAgentDialogOpen}
-      >
-        <AgentForm
-          onSuccess={() => {
-            setIsNewAgentDialogOpen(false);
-          }}
-          onCancel={() => {
-            setIsNewAgentDialogOpen(false);
-          }}
-        />
-      </ResponsiveDialog>
+      />
       <div className='flex flex-col gap-3 p-4'>
         <div className='flex items-center justify-between'>
           <h5 className='text-xl font-medium'>My Agents</h5>

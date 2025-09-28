@@ -1,6 +1,10 @@
 import { DEFAULT_LIMIT, DEFAULT_PAGE, MAX_LIMIT, MIN_LIMIT } from '@/constants';
 import { db } from '@/db';
 import { meetings } from '@/db/schema';
+import {
+  meetingInsertSchema,
+  meetingUpdateSchema,
+} from '@/modules/meetings/schema';
 import { createTRPCRouter, protectedProcedure } from '@/trpc/init';
 import { TRPCError } from '@trpc/server';
 import { and, count, desc, eq, ilike } from 'drizzle-orm';
@@ -59,5 +63,39 @@ export const meetingsRouter = createTRPCRouter({
       const totalPages = Math.ceil(total.count / input.limit);
 
       return { items, totalPages, total: total.count };
+    }),
+  create: protectedProcedure
+    .input(meetingInsertSchema)
+    .mutation(async (opts) => {
+      const [created] = await db
+        .insert(meetings)
+        .values({
+          ...opts.input,
+          userId: opts.ctx.auth.user.id,
+        })
+        .returning();
+
+      return created;
+    }),
+  update: protectedProcedure
+    .input(meetingUpdateSchema)
+    .mutation(async (opts) => {
+      const { id, ...input } = opts.input;
+      const [updated] = await db
+        .update(meetings)
+        .set(input)
+        .where(
+          and(eq(meetings.id, id), eq(meetings.userId, opts.ctx.auth.user.id)),
+        )
+        .returning();
+
+      if (!updated) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Meeting not found',
+        });
+      }
+
+      return updated;
     }),
 });
