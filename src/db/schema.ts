@@ -1,3 +1,4 @@
+import { MEETING_STATUSES } from '@/types/meeting-status';
 import { pgTable, text, timestamp, boolean, pgEnum } from 'drizzle-orm/pg-core';
 import { nanoid } from 'nanoid';
 
@@ -74,13 +75,7 @@ export const agents = pgTable('agents', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
 
-export const meetingStatus = pgEnum('meeting_status', [
-  'upcoming',
-  'active',
-  'completed',
-  'processing',
-  'cancelled',
-]);
+export const meetingStatus = pgEnum('meeting_status', MEETING_STATUSES);
 
 export const meetings = pgTable('meetings', {
   id: text('id')

@@ -51,7 +51,7 @@ export const CommandSelect = <T extends string = string>({
         }}
         className={cn(
           'justify-between px-2 text-base font-normal md:text-sm',
-          currentValue ?? 'text-muted-foreground',
+          !currentValue && 'text-muted-foreground',
           props.className,
         )}
       >
