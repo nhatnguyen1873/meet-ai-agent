@@ -5,7 +5,7 @@ export const meetingInsertSchema = z.object({
   agentId: z.string().min(1, 'Agent is required'),
 });
 
-export const meetingUpdateSchema = z.object({
+export const meetingEditSchema = z.object({
   ...meetingInsertSchema.shape,
   id: z.string().min(1, 'Id is required'),
 });

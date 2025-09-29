@@ -8,32 +8,32 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Ellipsis, Pencil, Trash2 } from 'lucide-react';
 
-interface AgentDetailsHeaderProps {
-  agentId: string;
-  agentName: string;
+interface MeetingDetailsHeaderProps {
+  meetingId: string;
+  meetingName: string;
   onEdit: () => void;
   onDelete: () => void;
 }
 
-export const AgentDetailsHeader = ({
-  agentId,
-  agentName,
+export const MeetingDetailsHeader = ({
+  meetingId,
+  meetingName,
   onEdit,
   onDelete,
-}: AgentDetailsHeaderProps) => {
+}: MeetingDetailsHeaderProps) => {
   return (
-    <div className='flex items-center justify-between'>
+    <div className='flex items-center justify-between p-4'>
       <BreadcrumbHeader
         items={[
           {
-            id: 'agents',
-            label: 'My agents',
-            href: '/agents',
+            id: 'meetings',
+            label: 'My meetings',
+            href: '/meetings',
           },
           {
-            id: agentId,
-            label: agentName,
-            href: `/agents/${agentId}`,
+            id: 'meeting-details',
+            label: meetingName,
+            href: `/meetings/${meetingId}`,
           },
         ]}
       />
@@ -45,10 +45,10 @@ export const AgentDetailsHeader = ({
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
           {[
-            { key: 'edit', label: 'Edit', onClick: onEdit, icon: Pencil },
-            { key: 'delete', label: 'Delete', onClick: onDelete, icon: Trash2 },
+            { id: 'edit', label: 'Edit', onClick: onEdit, icon: Pencil },
+            { id: 'delete', label: 'Delete', onClick: onDelete, icon: Trash2 },
           ].map((item) => (
-            <DropdownMenuItem key={item.key} onClick={item.onClick}>
+            <DropdownMenuItem key={item.id} onClick={item.onClick}>
               <item.icon className='size-4 text-black' />
               {item.label}
             </DropdownMenuItem>
