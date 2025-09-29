@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import { DEFAULT_PAGE } from '@/constants';
 import { NewAgentDialog } from '@/modules/agents/components/new-agent-dialog';
 import { useAgentsFilters } from '@/modules/agents/hooks/use-agents-filters';
@@ -29,32 +30,35 @@ export const AgentListHeader = () => {
             <Plus /> Add Agent
           </Button>
         </div>
-        <div className='flex items-center gap-2'>
-          <Input
-            placeholder='Search by name'
-            value={filters.search}
-            onChange={(e) => {
-              setFilters({
-                search: e.target.value,
-              });
-            }}
-            className='w-[240px] bg-white'
-          />
-          {!!filters.search && (
-            <Button
-              variant='outline'
-              onClick={() => {
+        <ScrollArea>
+          <div className='flex items-center gap-2'>
+            <Input
+              placeholder='Search by name'
+              value={filters.search}
+              onChange={(e) => {
                 setFilters({
-                  search: '',
-                  page: DEFAULT_PAGE,
+                  search: e.target.value,
                 });
               }}
-            >
-              <X />
-              Clear
-            </Button>
-          )}
-        </div>
+              className='w-[240px] bg-white'
+            />
+            {!!filters.search && (
+              <Button
+                variant='outline'
+                onClick={() => {
+                  setFilters({
+                    search: '',
+                    page: DEFAULT_PAGE,
+                  });
+                }}
+              >
+                <X />
+                Clear
+              </Button>
+            )}
+          </div>
+          <ScrollBar orientation='horizontal' />
+        </ScrollArea>
       </div>
     </>
   );

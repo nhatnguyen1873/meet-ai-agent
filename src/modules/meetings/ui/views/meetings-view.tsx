@@ -8,15 +8,37 @@ import { columns } from '@/modules/meetings/ui/components/columns';
 import { useTRPC } from '@/trpc/client';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
+import { useMeetingsFilters } from '@/modules/meetings/hooks/use-meetings-filters';
+import { DataPagination } from '@/components/data-pagination';
+import { useRouter } from 'next/navigation';
 
 export const MeetingsView = () => {
   const trpc = useTRPC();
-  const getMeetings = useSuspenseQuery(trpc.meetings.getMany.queryOptions({}));
+  const router = useRouter();
+  const [meetingFilters, setMeetingFilters] = useMeetingsFilters();
+  const getMeetings = useSuspenseQuery(
+    trpc.meetings.getMany.queryOptions(meetingFilters),
+  );
 
   return (
     <div className='flex flex-col gap-4 px-4 pb-4'>
       {getMeetings.data.items.length > 0 ? (
-        <DataTable columns={columns} data={getMeetings.data.items} />
+        <>
+          <DataTable
+            columns={columns}
+            data={getMeetings.data.items}
+            onRowClick={(row) => {
+              router.push(`/meetings/${row.id}`);
+            }}
+          />
+          <DataPagination
+            totalPages={getMeetings.data.totalPages}
+            page={meetingFilters.page}
+            onPageChange={(page) => {
+              setMeetingFilters({ page });
+            }}
+          />
+        </>
       ) : (
         <EmptyState
           title='Create your first meeting'
