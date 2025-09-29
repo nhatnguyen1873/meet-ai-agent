@@ -11,9 +11,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
     <SidebarProvider className='bg-muted'>
       <DashboardSidebar />
-      <div className='flex grow flex-col'>
+      <div className='flex min-w-0 grow flex-col'>
         <DashboardNavbar />
-        <main className='grow'>{children}</main>
+        <main className='min-w-0 grow'>{children}</main>
       </div>
     </SidebarProvider>
   );

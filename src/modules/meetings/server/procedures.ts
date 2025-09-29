@@ -6,6 +6,7 @@ import {
   meetingUpdateSchema,
 } from '@/modules/meetings/schema';
 import { createTRPCRouter, protectedProcedure } from '@/trpc/init';
+import { MEETING_STATUSES } from '@/types/meeting-status';
 import { TRPCError } from '@trpc/server';
 import { and, count, desc, eq, getTableColumns, ilike, sql } from 'drizzle-orm';
 import * as z from 'zod';
@@ -39,13 +40,19 @@ export const meetingsRouter = createTRPCRouter({
         page: z.number().default(DEFAULT_PAGE),
         limit: z.number().min(MIN_LIMIT).max(MAX_LIMIT).default(DEFAULT_LIMIT),
         search: z.string().nullish(),
+        agentId: z.string().nullish(),
+        status: z.enum(MEETING_STATUSES).nullish(),
       }),
     )
     .query(async ({ input, ctx }) => {
       const andConditions = [
         eq(meetings.userId, ctx.auth.user.id),
         input.search ? ilike(meetings.name, `%${input.search}%`) : undefined,
+        input.agentId ? eq(meetings.agentId, input.agentId) : undefined,
+        input.status ? eq(meetings.status, input.status) : undefined,
       ];
+
+      const innerJoinConds = [agents, eq(meetings.agentId, agents.id)] as const;
 
       const items = await db
         .select({
@@ -56,7 +63,7 @@ export const meetingsRouter = createTRPCRouter({
           ),
         })
         .from(meetings)
-        .innerJoin(agents, eq(meetings.agentId, agents.id))
+        .innerJoin(...innerJoinConds)
         .where(and(...andConditions))
         .orderBy(desc(meetings.createdAt), desc(meetings.id))
         .limit(input.limit)
@@ -65,7 +72,7 @@ export const meetingsRouter = createTRPCRouter({
       const [total] = await db
         .select({ count: count() })
         .from(meetings)
-        .innerJoin(agents, eq(meetings.agentId, agents.id))
+        .innerJoin(...innerJoinConds)
         .where(and(...andConditions));
 
       const totalPages = Math.ceil(total.count / input.limit);

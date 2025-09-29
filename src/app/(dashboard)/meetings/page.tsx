@@ -1,4 +1,5 @@
 import { auth } from '@/lib/auth';
+import { loadMeetingSearchParams } from '@/modules/meetings/params';
 import { MeetingsListHeader } from '@/modules/meetings/ui/components/meetings-list-header';
 import {
   MeetingsView,
@@ -9,7 +10,13 @@ import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
-export default async function MeetingsPage() {
+interface MeetingsPageProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+export default async function MeetingsPage({
+  searchParams,
+}: MeetingsPageProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -18,7 +25,9 @@ export default async function MeetingsPage() {
     redirect('/sign-in');
   }
 
-  prefetch(trpc.meetings.getMany.queryOptions({}));
+  const meetingFilters = await loadMeetingSearchParams(searchParams);
+
+  prefetch(trpc.meetings.getMany.queryOptions(meetingFilters));
 
   return (
     <>

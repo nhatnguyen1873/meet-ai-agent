@@ -11,12 +11,12 @@ import {
 } from '@/components/ui/command';
 import { cn } from '@/lib/utils';
 import { ChevronsUpDown } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 
 interface Option<T extends string = string> {
   id: string;
   value: T;
-  label: string;
+  label: ReactNode;
 }
 
 interface CommandSelectProps<T extends string = string> {
@@ -55,13 +55,16 @@ export const CommandSelect = <T extends string = string>({
           props.className,
         )}
       >
-        {currentValue ?? placeholder}
+        {currentValue || placeholder}
         <ChevronsUpDown />
       </Button>
       <ResponsiveCommandDialog
         shouldFilter={!onSearch}
         open={open}
-        onOpenChange={setOpen}
+        onOpenChange={(open) => {
+          onSearch?.('');
+          setOpen(open);
+        }}
       >
         <CommandInput placeholder='Search...' onValueChange={onSearch} />
         <CommandList>
