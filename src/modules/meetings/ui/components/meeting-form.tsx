@@ -28,13 +28,13 @@ type MeetingInsertValues = z.infer<typeof meetingInsertSchema>;
 interface MeetingFormProps {
   onSuccess?: (id?: string) => void;
   onCancel?: () => void;
-  initialValues?: MeetingGetOne;
+  initialData?: MeetingGetOne;
 }
 
 export const MeetingForm = ({
   onSuccess,
   onCancel,
-  initialValues,
+  initialData,
 }: MeetingFormProps) => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
@@ -63,21 +63,21 @@ export const MeetingForm = ({
       },
     }),
   );
-  const updateMeeting = useMutation(
-    trpc.meetings.update.mutationOptions({
+  const editMeeting = useMutation(
+    trpc.meetings.edit.mutationOptions({
       onSuccess: async () => {
         await queryClient.invalidateQueries(
           trpc.meetings.getMany.queryOptions({}),
         );
 
-        if (initialValues?.id) {
+        if (initialData?.id) {
           await queryClient.invalidateQueries(
-            trpc.meetings.getOne.queryOptions({ id: initialValues.id }),
+            trpc.meetings.getOne.queryOptions({ id: initialData.id }),
           );
         }
 
         onSuccess?.();
-        toast.success('Meeting updated successfully');
+        toast.success('Meeting edited successfully');
       },
       onError: (error) => {
         toast.error(error.message);
@@ -87,17 +87,17 @@ export const MeetingForm = ({
   const form = useForm<MeetingInsertValues>({
     resolver: zodResolver(meetingInsertSchema),
     defaultValues: {
-      name: initialValues?.name ?? '',
-      agentId: initialValues?.agentId,
+      name: initialData?.name ?? '',
+      agentId: initialData?.agentId,
     },
   });
 
-  const isEdit = !!initialValues?.id;
+  const isEdit = !!initialData?.id;
 
   const handleSubmit = (values: MeetingInsertValues) => {
     if (isEdit) {
-      updateMeeting.mutate({
-        id: initialValues.id,
+      editMeeting.mutate({
+        id: initialData.id,
         ...values,
       });
     } else {
@@ -180,9 +180,9 @@ export const MeetingForm = ({
             )}
             <Button
               type='submit'
-              disabled={createMeeting.isPending || updateMeeting.isPending}
+              disabled={createMeeting.isPending || editMeeting.isPending}
             >
-              {isEdit ? 'Update' : 'Create'}
+              {isEdit ? 'Save' : 'Create'}
             </Button>
           </div>
         </form>
