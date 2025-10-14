@@ -3,9 +3,14 @@
 import { ErrorState } from '@/components/error-state';
 import { LoadingState } from '@/components/loading-state';
 import { useConfirm } from '@/contexts/confirm/use-confirm';
+import { ActiveState } from '@/modules/meetings/ui/components/active-state';
+import { CancelledState } from '@/modules/meetings/ui/components/cancelled-state';
 import { EditMeetingDialog } from '@/modules/meetings/ui/components/edit-meeting-dialog';
 import { MeetingDetailsHeader } from '@/modules/meetings/ui/components/meeting-details-header';
+import { ProcessingState } from '@/modules/meetings/ui/components/processing-state';
+import { UpcomingState } from '@/modules/meetings/ui/components/upcoming-state';
 import { useTRPC } from '@/trpc/client';
+import { MEETING_STATUSES, type MeetingStatus } from '@/types/meeting-status';
 import {
   useMutation,
   useQueryClient,
@@ -50,6 +55,14 @@ export const MeetingDetailsView = ({ meetingId }: MeetingDetailsViewProps) => {
     }),
   );
 
+  const statusMap: Record<MeetingStatus, ReactNode> = {
+    [MEETING_STATUSES.upcoming]: <UpcomingState meetingId={meetingId} />,
+    [MEETING_STATUSES.active]: <ActiveState meetingId={meetingId} />,
+    [MEETING_STATUSES.cancelled]: <CancelledState />,
+    [MEETING_STATUSES.processing]: <ProcessingState />,
+    [MEETING_STATUSES.completed]: <div>Completed</div>,
+  };
+
   return (
     <>
       <EditMeetingDialog
@@ -70,6 +83,7 @@ export const MeetingDetailsView = ({ meetingId }: MeetingDetailsViewProps) => {
             deleteMeeting.mutate({ id: meetingId });
           }}
         />
+        <div className='px-4 pb-4'>{statusMap[getMeeting.data.status]}</div>
       </div>
     </>
   );
