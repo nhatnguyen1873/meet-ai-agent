@@ -55,12 +55,19 @@ export const MeetingDetailsView = ({ meetingId }: MeetingDetailsViewProps) => {
     }),
   );
 
-  const statusMap: Record<MeetingStatus, ReactNode> = {
-    [MEETING_STATUSES.upcoming]: <UpcomingState meetingId={meetingId} />,
-    [MEETING_STATUSES.active]: <ActiveState meetingId={meetingId} />,
-    [MEETING_STATUSES.cancelled]: <CancelledState />,
-    [MEETING_STATUSES.processing]: <ProcessingState />,
-    [MEETING_STATUSES.completed]: <div>Completed</div>,
+  const statusMap: Record<
+    MeetingStatus,
+    (props: { meetingId: string }) => ReactNode
+  > = {
+    [MEETING_STATUSES.upcoming]: ({ meetingId }) => (
+      <UpcomingState meetingId={meetingId} />
+    ),
+    [MEETING_STATUSES.active]: ({ meetingId }) => (
+      <ActiveState meetingId={meetingId} />
+    ),
+    [MEETING_STATUSES.cancelled]: () => <CancelledState />,
+    [MEETING_STATUSES.processing]: () => <ProcessingState />,
+    [MEETING_STATUSES.completed]: () => <div>Completed</div>,
   };
 
   return (
@@ -83,7 +90,9 @@ export const MeetingDetailsView = ({ meetingId }: MeetingDetailsViewProps) => {
             deleteMeeting.mutate({ id: meetingId });
           }}
         />
-        <div className='px-4 pb-4'>{statusMap[getMeeting.data.status]}</div>
+        <div className='px-4 pb-4'>
+          {statusMap[getMeeting.data.status]({ meetingId })}
+        </div>
       </div>
     </>
   );

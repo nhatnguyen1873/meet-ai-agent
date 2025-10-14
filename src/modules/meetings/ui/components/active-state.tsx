@@ -11,7 +11,7 @@ import { Video } from 'lucide-react';
 import Link from 'next/link';
 
 interface ActiveStateProps {
-  meetingId?: string;
+  meetingId: string;
 }
 
 export const ActiveState = ({ meetingId }: ActiveStateProps) => {

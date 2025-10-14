@@ -11,7 +11,7 @@ import { Ban, Video } from 'lucide-react';
 import Link from 'next/link';
 
 interface UpcomingStateProps {
-  meetingId?: string;
+  meetingId: string;
   isCancelling?: boolean;
   onCancel?: () => void;
 }
