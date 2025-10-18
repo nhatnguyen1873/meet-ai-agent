@@ -28,14 +28,9 @@ export const meetingsRouter = createTRPCRouter({
       },
     ]);
 
-    const nowSecUnix = Math.floor(Date.now() / 1000);
-
     return streamVideo.generateUserToken({
       user_id: user.id,
-      exp: nowSecUnix + 60 * 60,
-
-      // TODO: semantically, it should be set to a duration in seconds, not a Unix timestamp, but it's currently working.
-      validity_in_seconds: nowSecUnix - 60,
+      exp: Math.floor(Date.now() / 1000) + 60 * 60,
     });
   }),
   getOne: protectedProcedure
