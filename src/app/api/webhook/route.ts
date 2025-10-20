@@ -40,11 +40,10 @@ export async function POST(req: NextRequest) {
 
   const eventType = payload?.type;
 
-  console.log('eventType:', eventType);
-
   if (eventType === 'call.session_started') {
     const event = payload as unknown as CallSessionStartedEvent;
-    const { meetingId } = event.call.custom as CustomCallCreateData;
+    const { meetingId } =
+      (event.call.custom as CustomCallCreateData | undefined) ?? {};
 
     if (!meetingId) {
       return NextResponse.json(
@@ -77,9 +76,18 @@ export async function POST(req: NextRequest) {
     }
 
     const call = streamVideo.video.call('default', meetingId);
+    const openAiApiKey = process.env.OPENAI_API_KEY;
+
+    if (!openAiApiKey) {
+      return NextResponse.json(
+        { error: 'Missing OpenAI API key' },
+        { status: 500 },
+      );
+    }
+
     const realtimeClient = await streamVideo.video.connectOpenAi({
       call,
-      openAiApiKey: process.env.OPENAI_API_KEY || '',
+      openAiApiKey,
       agentUserId: existingAgent.id,
     });
 
