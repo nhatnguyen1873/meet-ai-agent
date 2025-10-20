@@ -7,6 +7,7 @@ import {
   meetingInsertSchema,
   meetingEditSchema,
 } from '@/modules/meetings/schema';
+import type { CustomCallCreateData } from '@/modules/meetings/types';
 import { createTRPCRouter, protectedProcedure } from '@/trpc/init';
 import { MEETING_STATUSES } from '@/types/meeting-status';
 import { TRPCError } from '@trpc/server';
@@ -128,7 +129,7 @@ export const meetingsRouter = createTRPCRouter({
           custom: {
             meetingId: createdMeeting.id,
             meetingName: createdMeeting.name,
-          },
+          } as CustomCallCreateData,
           settings_override: {
             transcription: {
               language: 'en',

@@ -38,12 +38,12 @@ export const CallConnect = ({
   );
 
   useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_STREAM_VIDEO_API_KEY;
+    const streamApiKey = process.env.NEXT_PUBLIC_STREAM_API_KEY;
     let _client: StreamVideoClient | undefined;
 
-    if (apiKey) {
+    if (streamApiKey) {
       _client = new StreamVideoClient({
-        apiKey,
+        apiKey: streamApiKey,
         user: {
           id: userId,
           name: userName,
