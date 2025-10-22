@@ -10,3 +10,11 @@ export type CustomCallCreateData = {
   meetingId: string;
   meetingName: string;
 };
+
+export interface StreamTranscriptItem {
+  type: string;
+  start_ts: number;
+  stop_ts: number;
+  speaker_id: string;
+  text: string;
+}
