@@ -138,21 +138,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const [updatingMeeting] = await db
+    const [updatedMeeting] = await db
       .update(meetings)
       .set({ transcriptUrl: event.call_transcription.url })
       .where(eq(meetings.id, meetingId))
       .returning();
 
-    if (!updatingMeeting) {
+    if (!updatedMeeting) {
       return NextResponse.json({ error: 'Meeting not found' }, { status: 404 });
     }
 
     await inngest.send({
       name: 'meetings/processing',
       data: {
-        meetingId: updatingMeeting.id,
-        transcriptUrl: updatingMeeting.transcriptUrl,
+        meetingId: updatedMeeting.id,
+        transcriptUrl: updatedMeeting.transcriptUrl,
       },
     });
   } else if (eventType === 'call.recording_ready') {
