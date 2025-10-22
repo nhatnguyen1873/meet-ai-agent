@@ -10,7 +10,8 @@
     "prepare": "husky",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "dev:webhook": "ngrok http --url=noncandescently-unintercepted-sharonda.ngrok-free.dev 3000"
+    "dev:webhook": "ngrok http --url=noncandescently-unintercepted-sharonda.ngrok-free.dev 3000",
+    "dev:inngest": "npx inngest-cli@latest dev"
   },
   "dependencies": {
     "@dicebear/collection": "^9.2.4",
@@ -25,6 +26,7 @@
     "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
+    "@radix-ui/react-tabs": "^1.1.13",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@stream-io/node-sdk": "^0.7.11",
     "@stream-io/openai-realtime-api": "^0.3.3",
@@ -53,6 +55,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hook-form": "^7.62.0",
+    "react-markdown": "^10.1.0",
     "server-only": "^0.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",

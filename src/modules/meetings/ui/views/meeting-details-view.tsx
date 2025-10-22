@@ -5,6 +5,7 @@ import { LoadingState } from '@/components/loading-state';
 import { useConfirm } from '@/contexts/confirm/use-confirm';
 import { ActiveState } from '@/modules/meetings/ui/components/active-state';
 import { CancelledState } from '@/modules/meetings/ui/components/cancelled-state';
+import { CompletedState } from '@/modules/meetings/ui/components/completed-state';
 import { EditMeetingDialog } from '@/modules/meetings/ui/components/edit-meeting-dialog';
 import { MeetingDetailsHeader } from '@/modules/meetings/ui/components/meeting-details-header';
 import { ProcessingState } from '@/modules/meetings/ui/components/processing-state';
@@ -67,7 +68,9 @@ export const MeetingDetailsView = ({ meetingId }: MeetingDetailsViewProps) => {
     ),
     [MEETING_STATUSES.cancelled]: () => <CancelledState />,
     [MEETING_STATUSES.processing]: () => <ProcessingState />,
-    [MEETING_STATUSES.completed]: () => <div>Completed</div>,
+    [MEETING_STATUSES.completed]: () => (
+      <CompletedState data={getMeeting.data} />
+    ),
   };
 
   return (

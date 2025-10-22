@@ -4,7 +4,7 @@ import { inngest } from '@/inngest/client';
 import type { StreamTranscriptItem } from '@/modules/meetings/types';
 import { eq, inArray } from 'drizzle-orm';
 import JSONL from 'jsonl-parse-stringify';
-import { createAgent, openai, type TextMessage } from '@inngest/agent-kit';
+import { createAgent, gemini, type TextMessage } from '@inngest/agent-kit';
 
 const summarizer = createAgent({
   name: 'summarizer',
@@ -28,7 +28,10 @@ Example:
 #### Next Section
 - Feature X automatically does Y
 - Mention of integration with Z`.trim(),
-  model: openai({ model: 'gpt-4o', apiKey: process.env.OPENAI_API_KEY }),
+  model: gemini({
+    model: 'gemini-2.0-flash',
+    apiKey: process.env.GEMINI_API_KEY,
+  }),
 });
 
 export const meetingsProcessing = inngest.createFunction(
@@ -88,7 +91,10 @@ export const meetingsProcessing = inngest.createFunction(
     await step.run('save-summary', async () => {
       await db
         .update(meetings)
-        .set({ summary: (output[0] as TextMessage).content as string })
+        .set({
+          summary: (output[0] as TextMessage).content as string,
+          status: 'completed',
+        })
         .where(eq(meetings.id, event.data.meetingId));
     });
   },
