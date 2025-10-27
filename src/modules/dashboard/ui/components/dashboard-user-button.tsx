@@ -78,11 +78,12 @@ export const DashboardUserButton = () => {
               {
                 label: 'Billing',
                 icon: CreditCardIcon,
+                onClick: () => authClient.customer.portal(),
               },
               {
                 label: 'Logout',
-                onClick: handleLogout,
                 icon: LogOutIcon,
+                onClick: handleLogout,
               },
             ].map((item, index) => (
               <DropdownMenuItem

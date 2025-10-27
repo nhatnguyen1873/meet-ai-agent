@@ -15,6 +15,7 @@ import {
   SidebarSeparator,
   useSidebar,
 } from '@/components/ui/sidebar';
+import { DashboardTrial } from '@/modules/dashboard/ui/components/dashboard-trial';
 import { DashboardUserButton } from '@/modules/dashboard/ui/components/dashboard-user-button';
 import {
   BotIcon,
@@ -98,6 +99,8 @@ export const DashboardSidebar = () => {
         ))}
       </SidebarContent>
       <SidebarFooter>
+        {/* TODO: optimize UI when changing sidebar state */}
+        {sidebar.open && <DashboardTrial />}
         {!sidebar.isMobile && (
           <div
             className='hover:bg-sidebar-accent flex size-8 cursor-pointer items-center justify-center rounded-xl'
