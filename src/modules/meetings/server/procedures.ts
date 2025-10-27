@@ -12,7 +12,11 @@ import type {
   CustomCallCreateData,
   StreamTranscriptItem,
 } from '@/modules/meetings/types';
-import { createTRPCRouter, protectedProcedure } from '@/trpc/init';
+import {
+  createTRPCRouter,
+  premiumProcedure,
+  protectedProcedure,
+} from '@/trpc/init';
 import { MEETING_STATUSES } from '@/types/meeting-status';
 import { TRPCError } from '@trpc/server';
 import {
@@ -222,7 +226,7 @@ export const meetingsRouter = createTRPCRouter({
 
       return { items, totalPages, total: total.count };
     }),
-  create: protectedProcedure
+  create: premiumProcedure('meetings')
     .input(meetingInsertSchema)
     .mutation(async ({ ctx, input }) => {
       const { user } = ctx.auth;
