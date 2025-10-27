@@ -2,7 +2,10 @@
 
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { MAX_FREE_AGENTS } from '@/modules/premium/constants';
+import {
+  MAX_FREE_AGENTS,
+  MAX_FREE_MEETINGS,
+} from '@/modules/premium/constants';
 import { useTRPC } from '@/trpc/client';
 import { useQuery } from '@tanstack/react-query';
 import { Rocket } from 'lucide-react';
@@ -33,10 +36,10 @@ export const DashboardTrial = () => {
         </div>
         <div className='flex flex-col gap-y-2'>
           <p className='text-xs'>
-            {getFreeUsage.data.meetingCount}/{MAX_FREE_AGENTS} meetings
+            {getFreeUsage.data.meetingCount}/{MAX_FREE_MEETINGS} meetings
           </p>
           <Progress
-            value={(getFreeUsage.data.meetingCount / MAX_FREE_AGENTS) * 100}
+            value={(getFreeUsage.data.meetingCount / MAX_FREE_MEETINGS) * 100}
           />
         </div>
       </div>

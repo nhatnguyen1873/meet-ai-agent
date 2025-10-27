@@ -71,7 +71,7 @@ export const premiumProcedure = (entity: 'meetings' | 'agents') =>
           if (userMeetings.count >= MAX_FREE_MEETINGS) {
             throw new TRPCError({
               code: 'FORBIDDEN',
-              message: 'You have reached the maximum numbers of free meetings',
+              message: 'You have reached the maximum number of free meetings',
             });
           }
 
@@ -85,7 +85,7 @@ export const premiumProcedure = (entity: 'meetings' | 'agents') =>
           if (userAgents.count >= MAX_FREE_AGENTS) {
             throw new TRPCError({
               code: 'FORBIDDEN',
-              message: 'You have reached the maximum numbers of free agents',
+              message: 'You have reached the maximum number of free agents',
             });
           }
 
