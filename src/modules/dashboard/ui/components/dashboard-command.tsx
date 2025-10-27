@@ -1,3 +1,6 @@
+'use client';
+
+import { GeneratedAvatar } from '@/components/generated-avatar';
 import {
   CommandEmpty,
   CommandGroup,
@@ -7,7 +10,10 @@ import {
   CommandSeparator,
   ResponsiveCommandDialog,
 } from '@/components/ui/command';
-import type { Dispatch, SetStateAction } from 'react';
+import { useTRPC } from '@/trpc/client';
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 
 interface DashboardCommandProps {
   open?: boolean;
@@ -15,21 +21,57 @@ interface DashboardCommandProps {
 }
 
 export const DashboardCommand = ({ open, setOpen }: DashboardCommandProps) => {
+  const router = useRouter();
+  const [search, setSearch] = useState('');
+  const trpc = useTRPC();
+  const getAgents = useQuery(trpc.agents.getMany.queryOptions({ search }));
+  const getMeetings = useQuery(trpc.meetings.getMany.queryOptions({ search }));
+
   return (
-    <ResponsiveCommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder='Type to search...' />
+    <ResponsiveCommandDialog
+      shouldFilter={false}
+      open={open}
+      onOpenChange={setOpen}
+    >
+      <CommandInput
+        placeholder='Find meetings or agents'
+        value={search}
+        onValueChange={setSearch}
+      />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading='Suggestions'>
-          <CommandItem>Calendar</CommandItem>
-          <CommandItem>Search Emoji</CommandItem>
-          <CommandItem>Calculator</CommandItem>
+        <CommandGroup heading='Meetings'>
+          <CommandEmpty>No meetings found.</CommandEmpty>
+          {getMeetings.data?.items.map((meeting) => (
+            <CommandItem
+              key={meeting.id}
+              onSelect={() => {
+                router.push(`/meetings/${meeting.id}`);
+                setOpen?.(false);
+              }}
+            >
+              {meeting.name}
+            </CommandItem>
+          ))}
         </CommandGroup>
-        <CommandSeparator />
-        <CommandGroup heading='Settings'>
-          <CommandItem>Profile</CommandItem>
-          <CommandItem>Billing</CommandItem>
-          <CommandItem>Settings</CommandItem>
+        <CommandSeparator alwaysRender />
+        <CommandGroup heading='Agents'>
+          <CommandEmpty>No agents found.</CommandEmpty>
+          {getAgents.data?.items.map((agent) => (
+            <CommandItem
+              key={agent.id}
+              onSelect={() => {
+                router.push(`/agents/${agent.id}`);
+                setOpen?.(false);
+              }}
+            >
+              <GeneratedAvatar
+                seed={agent.name}
+                variant='botttsNeutral'
+                className='size-5'
+              />
+              {agent.name}
+            </CommandItem>
+          ))}
         </CommandGroup>
       </CommandList>
     </ResponsiveCommandDialog>

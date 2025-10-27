@@ -7,20 +7,14 @@ import {
   StateTitle,
 } from '@/components/state';
 import { Button } from '@/components/ui/button';
-import { Ban, Video } from 'lucide-react';
+import { Video } from 'lucide-react';
 import Link from 'next/link';
 
 interface UpcomingStateProps {
   meetingId: string;
-  isCancelling?: boolean;
-  onCancel?: () => void;
 }
 
-export const UpcomingState = ({
-  meetingId,
-  isCancelling,
-  onCancel,
-}: UpcomingStateProps) => {
+export const UpcomingState = ({ meetingId }: UpcomingStateProps) => {
   return (
     <div className='flex flex-col gap-8 rounded-lg bg-white px-4 py-5'>
       <State>
@@ -34,16 +28,8 @@ export const UpcomingState = ({
           </StateDescription>
         </StateContent>
       </State>
-      <div className='flex flex-col-reverse gap-2 md:flex-row md:justify-center'>
-        <Button
-          variant={'secondary'}
-          disabled={isCancelling}
-          onClick={onCancel}
-        >
-          <Ban />
-          Cancel meeting
-        </Button>
-        <Button disabled={isCancelling} asChild>
+      <div className='flex flex-col md:flex-row md:justify-center'>
+        <Button asChild>
           <Link href={`/call/${meetingId}`}>
             <Video />
             Start meeting
